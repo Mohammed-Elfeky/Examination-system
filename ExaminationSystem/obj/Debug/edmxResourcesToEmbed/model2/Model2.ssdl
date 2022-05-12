@@ -1,0 +1,425 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ExaminationSystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Course">
+    <Key>
+      <PropertyRef Name="Crs_Id" />
+    </Key>
+    <Property Name="Crs_Id" Type="int" Nullable="false" />
+    <Property Name="course_Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Duration" Type="int" />
+  </EntityType>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="Dept_Id" />
+    </Key>
+    <Property Name="Dept_Id" Type="int" Nullable="false" />
+    <Property Name="Dept_Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="100" />
+    <Property Name="Location" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Exam">
+    <Key>
+      <PropertyRef Name="Exam_Id" />
+    </Key>
+    <Property Name="Exam_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="N_TF" Type="int" Nullable="false" />
+    <Property Name="N_Mcq" Type="int" Nullable="false" />
+    <Property Name="mark" Type="int" Nullable="false" />
+    <Property Name="date" Type="date" />
+  </EntityType>
+  <EntityType Name="Ins_Course">
+    <Key>
+      <PropertyRef Name="Ins_Id" />
+      <PropertyRef Name="Crs_Id" />
+    </Key>
+    <Property Name="Ins_Id" Type="int" Nullable="false" />
+    <Property Name="Crs_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Instructor">
+    <Key>
+      <PropertyRef Name="Ins_Id" />
+    </Key>
+    <Property Name="Ins_Id" Type="int" Nullable="false" />
+    <Property Name="Ins_Name" Type="nvarchar" MaxLength="100" />
+    <Property Name="Ins_Salary" Type="money" Nullable="false" />
+    <Property Name="Ins_Degree" Type="nvarchar" MaxLength="100" />
+    <Property Name="Dept_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="QestionAnswer">
+    <Key>
+      <PropertyRef Name="Ans_body" />
+      <PropertyRef Name="Q_Id" />
+    </Key>
+    <Property Name="Ans_body" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Q_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Question">
+    <Key>
+      <PropertyRef Name="Q_Id" />
+    </Key>
+    <Property Name="Q_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Q_body" Type="nvarchar" MaxLength="1000" Nullable="false" />
+    <Property Name="Q_Type" Type="nvarchar" MaxLength="10" />
+    <Property Name="mark" Type="int" />
+    <Property Name="Right_Ans" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Crs_Id" Type="int" />
+  </EntityType>
+  <EntityType Name="Stu_course">
+    <Key>
+      <PropertyRef Name="St_Id" />
+      <PropertyRef Name="Crs_Id" />
+    </Key>
+    <Property Name="St_Id" Type="int" Nullable="false" />
+    <Property Name="Crs_Id" Type="int" Nullable="false" />
+    <Property Name="Grade" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="ST_Id" />
+    </Key>
+    <Property Name="ST_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="St_Fname" Type="nvarchar" MaxLength="100" />
+    <Property Name="St_Lname" Type="nvarchar" MaxLength="100" />
+    <Property Name="St_Address" Type="nvarchar" MaxLength="100" />
+    <Property Name="St_Age" Type="int" />
+    <Property Name="Dept_id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Student_Exam_Question">
+    <Key>
+      <PropertyRef Name="Q_Id" />
+      <PropertyRef Name="Exam_Id" />
+    </Key>
+    <Property Name="Q_Id" Type="int" Nullable="false" />
+    <Property Name="Exam_Id" Type="int" Nullable="false" />
+    <Property Name="St_Id" Type="int" />
+    <Property Name="Stud_Ans" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Topic">
+    <Key>
+      <PropertyRef Name="Top_Id" />
+    </Key>
+    <Property Name="Top_Id" Type="int" Nullable="false" />
+    <Property Name="Top_Name" Type="nvarchar" MaxLength="100" />
+    <Property Name="course_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Ins_Course_Course">
+    <End Role="Course" Type="Self.Course" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Ins_Course" Type="Self.Ins_Course" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Course">
+        <PropertyRef Name="Crs_Id" />
+      </Principal>
+      <Dependent Role="Ins_Course">
+        <PropertyRef Name="Crs_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Ins_Course_Instructor">
+    <End Role="Instructor" Type="Self.Instructor" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Ins_Course" Type="Self.Ins_Course" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Instructor">
+        <PropertyRef Name="Ins_Id" />
+      </Principal>
+      <Dependent Role="Ins_Course">
+        <PropertyRef Name="Ins_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Instructor_Department">
+    <End Role="Department" Type="Self.Department" Multiplicity="1" />
+    <End Role="Instructor" Type="Self.Instructor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="Dept_Id" />
+      </Principal>
+      <Dependent Role="Instructor">
+        <PropertyRef Name="Dept_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_QestionAnswer_Question">
+    <End Role="Question" Type="Self.Question" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="QestionAnswer" Type="Self.QestionAnswer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Question">
+        <PropertyRef Name="Q_Id" />
+      </Principal>
+      <Dependent Role="QestionAnswer">
+        <PropertyRef Name="Q_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Question_Course">
+    <End Role="Course" Type="Self.Course" Multiplicity="0..1" />
+    <End Role="Question" Type="Self.Question" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Course">
+        <PropertyRef Name="Crs_Id" />
+      </Principal>
+      <Dependent Role="Question">
+        <PropertyRef Name="Crs_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Stu_course_Course">
+    <End Role="Course" Type="Self.Course" Multiplicity="1" />
+    <End Role="Stu_course" Type="Self.Stu_course" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Course">
+        <PropertyRef Name="Crs_Id" />
+      </Principal>
+      <Dependent Role="Stu_course">
+        <PropertyRef Name="Crs_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Stu_course_Student">
+    <End Role="Student" Type="Self.Student" Multiplicity="1" />
+    <End Role="Stu_course" Type="Self.Stu_course" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Student">
+        <PropertyRef Name="ST_Id" />
+      </Principal>
+      <Dependent Role="Stu_course">
+        <PropertyRef Name="St_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Department">
+    <End Role="Department" Type="Self.Department" Multiplicity="1" />
+    <End Role="Student" Type="Self.Student" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="Dept_Id" />
+      </Principal>
+      <Dependent Role="Student">
+        <PropertyRef Name="Dept_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Exam_Question_Exam">
+    <End Role="Exam" Type="Self.Exam" Multiplicity="1" />
+    <End Role="Student_Exam_Question" Type="Self.Student_Exam_Question" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Exam">
+        <PropertyRef Name="Exam_Id" />
+      </Principal>
+      <Dependent Role="Student_Exam_Question">
+        <PropertyRef Name="Exam_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Exam_Question_Question">
+    <End Role="Question" Type="Self.Question" Multiplicity="1" />
+    <End Role="Student_Exam_Question" Type="Self.Student_Exam_Question" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Question">
+        <PropertyRef Name="Q_Id" />
+      </Principal>
+      <Dependent Role="Student_Exam_Question">
+        <PropertyRef Name="Q_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Student_Exam_Question_Student">
+    <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
+    <End Role="Student_Exam_Question" Type="Self.Student_Exam_Question" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Student">
+        <PropertyRef Name="ST_Id" />
+      </Principal>
+      <Dependent Role="Student_Exam_Question">
+        <PropertyRef Name="St_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Topic_Course">
+    <End Role="Course" Type="Self.Course" Multiplicity="1" />
+    <End Role="Topic" Type="Self.Topic" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Course">
+        <PropertyRef Name="Crs_Id" />
+      </Principal>
+      <Dependent Role="Topic">
+        <PropertyRef Name="course_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="assignAnswer" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="stid" Type="int" Mode="In" />
+    <Parameter Name="examId" Type="int" Mode="In" />
+  </Function>
+  <Function Name="delete_Ins_Crs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Ins_id" Type="int" Mode="In" />
+    <Parameter Name="Crs_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="delete_Stu_Crs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Stu_id" Type="int" Mode="In" />
+    <Parameter Name="Crs_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="deleteStudent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="stu_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="getQuestion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="numOfquestions" Type="int" Mode="In" />
+    <Parameter Name="crs_id" Type="int" Mode="In" />
+    <Parameter Name="typeQ" Type="nvarchar" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="Q_Id" Type="int" Nullable="false" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
+  </Function>
+  <Function Name="getStuCrsGrad" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="stu_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="insert_Ins_Crs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Ins_id" Type="int" Mode="In" />
+    <Parameter Name="Crs_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="insert_Stu_Crs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Stu_id" Type="int" Mode="In" />
+    <Parameter Name="Crs_id" Type="int" Mode="In" />
+    <Parameter Name="grade" Type="int" Mode="In" />
+  </Function>
+  <Function Name="insertStudent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Fname" Type="varchar" Mode="In" />
+    <Parameter Name="Lname" Type="varchar" Mode="In" />
+    <Parameter Name="Address" Type="varchar" Mode="In" />
+    <Parameter Name="age" Type="int" Mode="In" />
+    <Parameter Name="dept_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="Update_Ins_Crs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="OldIns_id" Type="int" Mode="In" />
+    <Parameter Name="OldCrs_id" Type="int" Mode="In" />
+    <Parameter Name="NewIns_id" Type="int" Mode="In" />
+    <Parameter Name="NewCrs_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="Update_Stu_Crs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="OldStu_id" Type="int" Mode="In" />
+    <Parameter Name="OldCrs_id" Type="int" Mode="In" />
+    <Parameter Name="NewStu_id" Type="int" Mode="In" />
+    <Parameter Name="NewCrs_id" Type="int" Mode="In" />
+    <Parameter Name="grade" Type="int" Mode="In" />
+  </Function>
+  <Function Name="UpdateStudent" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="stu_id" Type="int" Mode="In" />
+    <Parameter Name="Fname" Type="varchar" Mode="In" />
+    <Parameter Name="Lname" Type="varchar" Mode="In" />
+    <Parameter Name="Address" Type="varchar" Mode="In" />
+    <Parameter Name="age" Type="int" Mode="In" />
+    <Parameter Name="dept_id" Type="int" Mode="In" />
+  </Function>
+  <EntityContainer Name="ExaminationSystemModelStoreContainer">
+    <EntitySet Name="Course" EntityType="Self.Course" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Exam" EntityType="Self.Exam" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Ins_Course" EntityType="Self.Ins_Course" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Instructor" EntityType="Self.Instructor" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="QestionAnswer" EntityType="Self.QestionAnswer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Stu_course" EntityType="Self.Stu_course" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Student_Exam_Question" EntityType="Self.Student_Exam_Question" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Topic" EntityType="Self.Topic" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Ins_Course_Course" Association="Self.FK_Ins_Course_Course">
+      <End Role="Course" EntitySet="Course" />
+      <End Role="Ins_Course" EntitySet="Ins_Course" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Ins_Course_Instructor" Association="Self.FK_Ins_Course_Instructor">
+      <End Role="Instructor" EntitySet="Instructor" />
+      <End Role="Ins_Course" EntitySet="Ins_Course" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Instructor_Department" Association="Self.FK_Instructor_Department">
+      <End Role="Department" EntitySet="Department" />
+      <End Role="Instructor" EntitySet="Instructor" />
+    </AssociationSet>
+    <AssociationSet Name="FK_QestionAnswer_Question" Association="Self.FK_QestionAnswer_Question">
+      <End Role="Question" EntitySet="Question" />
+      <End Role="QestionAnswer" EntitySet="QestionAnswer" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Question_Course" Association="Self.FK_Question_Course">
+      <End Role="Course" EntitySet="Course" />
+      <End Role="Question" EntitySet="Question" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Stu_course_Course" Association="Self.FK_Stu_course_Course">
+      <End Role="Course" EntitySet="Course" />
+      <End Role="Stu_course" EntitySet="Stu_course" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Stu_course_Student" Association="Self.FK_Stu_course_Student">
+      <End Role="Student" EntitySet="Student" />
+      <End Role="Stu_course" EntitySet="Stu_course" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Department" Association="Self.FK_Student_Department">
+      <End Role="Department" EntitySet="Department" />
+      <End Role="Student" EntitySet="Student" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Exam_Question_Exam" Association="Self.FK_Student_Exam_Question_Exam">
+      <End Role="Exam" EntitySet="Exam" />
+      <End Role="Student_Exam_Question" EntitySet="Student_Exam_Question" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Exam_Question_Question" Association="Self.FK_Student_Exam_Question_Question">
+      <End Role="Question" EntitySet="Question" />
+      <End Role="Student_Exam_Question" EntitySet="Student_Exam_Question" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Student_Exam_Question_Student" Association="Self.FK_Student_Exam_Question_Student">
+      <End Role="Student" EntitySet="Student" />
+      <End Role="Student_Exam_Question" EntitySet="Student_Exam_Question" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Topic_Course" Association="Self.FK_Topic_Course">
+      <End Role="Course" EntitySet="Course" />
+      <End Role="Topic" EntitySet="Topic" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
